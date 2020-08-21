@@ -28,6 +28,7 @@ import java.net.SocketTimeoutException
 import java.net.URL
 import java.net.URLDecoder
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 /**
  * 读取网络文件，带缓冲区。
@@ -115,7 +116,7 @@ class BuffRandReadURL(private val audio: IAudio?) : RandomRead() {
         offset += len
 
         // 3.通知"写"线程
-        synchronized(buf) { condition.signal() }
+        lockShit.withLock { condition.signal() }
         return len
     }
 
@@ -126,7 +127,9 @@ class BuffRandReadURL(private val audio: IAudio?) : RandomRead() {
         var t: Long
         val t1 = System.currentTimeMillis()
         while (bufsize < BUFFERSIZE && !eof) {
-            condition.await()
+            lockShit.withLock {
+                condition.await()
+            }
             if (System.currentTimeMillis() - t1.also { t = it } < 200) continue
             kbps = (BUFLEN shr 10).toFloat() * 1000 / t
             msg = String.format("\rbuffered: %6.2f%%, %6.02fKB/s ",
@@ -147,7 +150,7 @@ class BuffRandReadURL(private val audio: IAudio?) : RandomRead() {
     override fun close() {
         // 结束Writer线程
         eof = true
-        synchronized(buf) { condition.signal() }
+        lockShit.withLock { condition.signal() }
         try {
             connection.close()
         } catch (e: IOException) {
@@ -174,7 +177,7 @@ class BuffRandReadURL(private val audio: IAudio?) : RandomRead() {
                     if (retry == 0) {
                         while (!eof) {
                             if (bufsize <= BUFFERSIZE) break
-                            synchronized(buf) { condition.await() }
+                            lockShit.withLock { condition.await() }
                         }
                         off = off and OFFMASK
                         rema = BLOCKLEN

@@ -66,7 +66,7 @@ public class PlayWindow extends JFrame
 			currentLocale = Locale.ENGLISH;
 		}
 		try {
-			resBundle = ResourceBundle.getBundle("org.websoft.resources.languages.language", currentLocale);
+			resBundle = ResourceBundle.getBundle("org.org.websoft.resources.languages.language", currentLocale);
 		} catch (MissingResourceException e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -276,7 +276,7 @@ public class PlayWindow extends JFrame
 	public void initializeTray() {
 		if(SystemTray.isSupported()) {
 			SystemTray tray = SystemTray.getSystemTray();
-			URL imageUrl = getClass().getResource("/org/websoft/resources/images/trayIcon.png");
+			URL imageUrl = getClass().getResource("/org/org.websoft/resources/images/trayIcon.png");
 			Image image = Toolkit.getDefaultToolkit().getImage(imageUrl);
 			
 			PopupMenu popup = new PopupMenu();
@@ -310,7 +310,7 @@ public class PlayWindow extends JFrame
 	//添加一个菜单
 	private JMenu getJMenu(String hit) {
 		JMenu menu = new JMenu();
-		Icon minIcon = new ImageIcon(getClass().getResource("/org/websoft/resources/images/min.png"));
+		Icon minIcon = new ImageIcon(getClass().getResource("/org/org.websoft/resources/images/min.png"));
 		menu.setIcon(minIcon);
 		menu.setToolTipText(hit);
 		menu.setOpaque(false);
@@ -413,7 +413,7 @@ public class PlayWindow extends JFrame
 	//得到一个按钮
 	private JButton getJButton(String hit, final String method) {
 		JButton button = new JButton();
-		Icon closeIcon = new ImageIcon(this.getClass().getResource("/org/websoft/resources/images/min.png"));
+		Icon closeIcon = new ImageIcon(this.getClass().getResource("/org/org.websoft/resources/images/min.png"));
 		button.setToolTipText(hit);
 		button.setIcon(closeIcon);
 		button.setOpaque(false);

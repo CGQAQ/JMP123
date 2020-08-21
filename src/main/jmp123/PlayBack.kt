@@ -29,6 +29,7 @@ import org.websoft.widget.SpectrumPane
 import java.io.IOException
 import java.util.concurrent.locks.ReentrantLock
 import javax.swing.JSlider
+import kotlin.concurrent.withLock
 
 /**
  * 播放一个文件及播放时暂停等控制。用PlayBack播放一个文件的步骤为：
@@ -84,7 +85,7 @@ class PlayBack(private val audio: IAudio?) {
     fun pause(): Boolean {
         audio!!.start(paused)
         if (paused) {
-            synchronized(this) { condition.signal() }
+            lock.withLock{ condition.signal() }
         }
         paused = !paused
         return paused
@@ -95,7 +96,7 @@ class PlayBack(private val audio: IAudio?) {
      */
     fun stop() {
         eof = true
-        synchronized(this) { condition.signal() }
+        lock.withLock { condition.signal() }
         if (instream != null) instream!!.close()
     }
 
@@ -168,7 +169,7 @@ class PlayBack(private val audio: IAudio?) {
         }
 
         // 成功解析帧头后初始化音频输出
-        if (audio != null && !audio.open(header, iD3Tag!!.artist)) return false
+        if (audio != null && !audio.open(header, iD3Tag!!.artist!!)) return false
 
         ////////////////////////
         ////添加方法/////////////
@@ -247,7 +248,7 @@ class PlayBack(private val audio: IAudio?) {
 
                 // 3. 检测并处理暂停
                 if (paused) {
-                    synchronized(this) { while (paused && !eof) condition.await() }
+                    lock.withLock{ while (paused && !eof) condition.await() }
                 }
             }
             if (verbose) {
@@ -298,8 +299,8 @@ class PlayBack(private val audio: IAudio?) {
                     if (volumeBar != null) {
                         val currentValue = volumeBar.value.toFloat()
                         val maxValue = 0f //audio.getFloatControl().getMaximum();
-                        val minValue = audio!!.floatControl.minimum + 30
-                        audio.setLineGain(currentValue / 100 * (maxValue - minValue) + minValue)
+                        val minValue = audio!!.floatControl?.minimum?.plus(30)
+                        audio.setLineGain(currentValue / 100 * (maxValue - minValue!!) + minValue)
                     } else {
                         audio!!.setLineGain(vloume)
                     }
@@ -311,7 +312,7 @@ class PlayBack(private val audio: IAudio?) {
 
                 // 3. 检测并处理暂停
                 if (paused) {
-                    synchronized(this) { while (paused && !eof) condition.await() }
+                    lock.withLock { while (paused && !eof) condition.await() }
                 }
             }
         } catch (e: IOException) {

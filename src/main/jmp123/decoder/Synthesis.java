@@ -77,9 +77,9 @@ public class Synthesis {
 	 */
 	public void synthesisSubBand (float[] samples, int ch) {
 		final float[] fifo = fifobuf[ch];
-		final byte[] pcmbuf = audioBuf.pcmbuf;
+		final byte[] pcmbuf = audioBuf.getPcmbuf();
 		float sum, win[];
-		int i, pcmi, off = audioBuf.off[ch];
+		int i, pcmi, off = audioBuf.getOff()[ch];
 
 		//1. Shift
 		fifoIndex[ch] = (fifoIndex[ch] - 64) & 0x3FF;
@@ -509,7 +509,7 @@ public class Synthesis {
 			}
 			break;
 		}
-		audioBuf.off[ch] = off;
+		audioBuf.getOff()[ch] = off;
 	}
 
 	/**

@@ -1,4 +1,4 @@
-package com.cg
+package com.cgqaq
 
 import jmp123.PlayBack
 import jmp123.output.Audio

@@ -30,13 +30,15 @@ import kotlin.math.min
  * 将解码得到的PCM数据写入音频设备（播放）。
  *
  */
-class Audio : IAudio {
+class Audio() : IAudio {
     private var dateline: SourceDataLine? = null
 
+    override lateinit var floatControl: FloatControl
+
     /**音量控制器  */
-    private var volControl: FloatControl? = null
+    var volControl: FloatControl? = null
     override fun open(h: Header, artist: String): Boolean {
-        val af = AudioFormat(h.samplingRate.toFloat(), 16,
+        val af = AudioFormat(h.getSamplingRate().toFloat(), 16,
                 h.channels, true, false)
         try {
             dateline = AudioSystem.getSourceDataLine(af) as SourceDataLine
@@ -68,10 +70,6 @@ class Audio : IAudio {
             val newGain = min(max(gain, volControl!!.minimum), volControl!!.maximum)
             volControl!!.value = newGain
         }
-    }
-
-    override fun getFloatControl(): FloatControl {
-        return volControl!!
     }
 
     //==================================

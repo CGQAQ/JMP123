@@ -10,7 +10,7 @@ public class Main {
         Audio audio = new Audio();
         PlayBack playBack = new PlayBack(audio);
         try {
-            playBack.open("/home/jason/Downloads/Ed Sheeran - I Don't Care (Live At Abbey Road).mp3", "I don't care");
+            playBack.open("/home/jason/code/cc/cc_jmp123/test.mp3", "I don't care");
             playBack.start(true);
         }  catch (IOException e) {
             e.printStackTrace();

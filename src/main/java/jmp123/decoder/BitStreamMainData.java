@@ -34,7 +34,7 @@ public final class BitStreamMainData extends BitStream {
 
 	/**
 	 * 创建一个位流BitStreamMainData对象，位流的缓冲区大小len指定，位流的缓冲区尾部空出的长度由extra指定。
-	 * 
+	 *
 	 * @param len
 	 *            缓冲区可访问长度。
 	 * @param extra
@@ -46,9 +46,10 @@ public final class BitStreamMainData extends BitStream {
 		initHuffTable();
 	}
 
+
 	/**
 	 * 一个粒度组内的一个声道哈夫曼解码。
-	 * 
+	 *
 	 * @param ci
 	 *            一粒度内的一声道信息。
 	 * @param hv
@@ -106,7 +107,7 @@ public final class BitStreamMainData extends BitStream {
 					num -= part3len + num;
 					break;
 				}
-				
+
 				while (num < 24) { // refresh mask
 					mask |= (b[bytePos++] & 0xff) << (24 - num);
 					num += 8;
@@ -462,7 +463,7 @@ public final class BitStreamMainData extends BitStream {
 
 		htc1 = new short[] {	//16
 			1039,1038,1037,1036,1035,1034,1033,1032,1031,1030,1029,1028,1027,1026,1025,1024};
-	
+
 		region = new int[3];
 		lin = new int[32];
 		htbv = new short[32][];

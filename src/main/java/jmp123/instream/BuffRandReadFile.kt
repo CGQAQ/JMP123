@@ -18,32 +18,35 @@
 * If you would like to negotiate alternate licensing terms, you may do
 * so by contacting the author: <http://jmp123.sourceforge.net/>
 */
-package jmp123.instream;
+package jmp123.instream
 
-import java.io.RandomAccessFile;
-import java.io.IOException;
+import java.io.IOException
+import java.io.RandomAccessFile
 
-public final class BuffRandReadFile extends RandomRead {
-	private RandomAccessFile rafIn;
+class BuffRandReadFile : RandomRead() {
+    private var rafIn: RandomAccessFile? = null
+    @Throws(IOException::class)
+    override fun open(name: String?, title: String?): Boolean {
+        rafIn = RandomAccessFile(name, "r")
+        length = rafIn!!.length()
+        return true
+    }
 
-	public boolean open(String name, String title) throws IOException {
-		rafIn = new RandomAccessFile(name, "r");
-		length = rafIn.length();
-		return true;
-	}
+    @Throws(IOException::class)
+    override fun read(b: ByteArray?, off: Int, len: Int): Int {
+        return rafIn!!.read(b, off, len)
+    }
 
-	public int read(byte b[], int off, int len) throws IOException {
-		return rafIn.read(b, off, len);
-	}
+    @Throws(IOException::class)
+    override fun seek(pos: Long): Boolean {
+        rafIn!!.seek(pos)
+        return true
+    }
 
-	public boolean seek(long pos) throws IOException {
-		rafIn.seek(pos);
-		return true;
-	}
-
-	public void close() {
-		try {
-			rafIn.close();
-		} catch (IOException e) {}
-	}
+    override fun close() {
+        try {
+            rafIn!!.close()
+        } catch (e: IOException) {
+        }
+    }
 }
